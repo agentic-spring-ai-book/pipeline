@@ -9,6 +9,7 @@ env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  TOOLBOOK_API_KEY: ${{ secrets.TOOLBOOK_API_KEY }}
 
 on:
   # the next bit is very important:
@@ -66,3 +67,24 @@ jobs:
           name: pipeline-run-log
           path: target/pipeline-run.log
           if-no-files-found: ignore
+      
+      - name: sync with Toolbook
+        run: |
+
+          set -euo pipefail
+          find . 
+
+          # GitHub Actions step; chapter files are named like 01-preface.md
+          auth=(-H "Authorization: Bearer $TOOLBOOK_API_KEY")
+          base="$TOOLBOOK_API_URL/toolbooks/bootiful-spring-ai"
+
+          curl --fail-with-body -X DELETE "${auth[@]}" "$base/chapters"
+          for chapter in chapters/*.md; do
+            filename="${chapter##*/}"
+            chapter_slug="$filename"
+            curl --fail-with-body -X POST "${auth[@]}" \
+              -H 'Content-Type: text/markdown' --data-binary "@$chapter" \
+              "$base/chapters/$chapter_slug"
+          done
+          # Remove this line when the pipeline should update only the draft.
+          curl --fail-with-body -X POST "${auth[@]}" "$base/versions/promote
