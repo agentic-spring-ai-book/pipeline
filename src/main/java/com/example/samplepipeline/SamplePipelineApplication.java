@@ -22,7 +22,12 @@ public class SamplePipelineApplication {
 	private static final Logger log = LoggerFactory.getLogger(SamplePipelineApplication.class);
 
 	static void main(String[] args) {
-		SpringApplication.run(SamplePipelineApplication.class, args);
+		// NB: a Spring Batch job that FAILS does not throw out of SpringApplication.run;
+		// the launcher just records the failed JobExecution. Boot's
+		// JobExecutionExitCodeGenerator turns that into a non-zero exit code, but only if
+		// we actually ask for it and hand it to System.exit. Without this, a blown-up
+		// pipeline still exits 0 and CI goes green.
+		System.exit(SpringApplication.exit(SpringApplication.run(SamplePipelineApplication.class, args)));
 	}
 
 	@Bean
