@@ -15,4 +15,4 @@ for chapter in /home/runner/Desktop/target/MarkdownProducer/*.md; do
 	curl --fail-with-body -X POST "${auth[@]}" -H 'Content-Type: text/markdown' --data-binary "@$chapter" "$base/chapters/$chapter_slug"
 done
 
-curl --fail-with-body -X POST "${auth[@]}" "$base/versions/promote
+curl --fail-with-body -X POST "${auth[@]}" "$base/versions/promote"
