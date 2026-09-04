@@ -72,8 +72,8 @@ jobs:
         run: |
 
           set -euo pipefail
-          find . 
-
+          find $HOME/Desktop/target
+          export TOOLBOOK_API_URL=https://api.mytoolbook.ai
           # GitHub Actions step; chapter files are named like 01-preface.md
           auth=(-H "Authorization: Bearer $TOOLBOOK_API_KEY")
           base="$TOOLBOOK_API_URL/toolbooks/bootiful-spring-ai"
