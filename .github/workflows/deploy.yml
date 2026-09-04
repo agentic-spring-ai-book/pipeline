@@ -79,7 +79,7 @@ jobs:
           base="$TOOLBOOK_API_URL/toolbooks/bootiful-spring-ai"
 
           curl --fail-with-body -X DELETE "${auth[@]}" "$base/chapters"
-          for chapter in chapters/*.md; do
+          for chapter in /home/runner/Desktop/target/MarkdownProducer/*.md; do
             filename="${chapter##*/}"
             chapter_slug="$filename"
             curl --fail-with-body -X POST "${auth[@]}" \
